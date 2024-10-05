@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/header_title"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="#005B2727"
         android:text="NoteMe"
@@ -34,6 +34,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
         android:layout_width="355dp"
         android:layout_height="54dp"
         android:layout_marginTop="128dp"
@@ -57,6 +58,21 @@
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <!-- Notes List Layout -->
+
+    <LinearLayout
+        android:id="@+id/noteList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintVertical_bias="0.05" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newNote"
