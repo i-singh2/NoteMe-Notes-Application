@@ -140,5 +140,41 @@
             />
     </LinearLayout>
 
+    <!-- Image -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorPickerLayout"
+        app:layout_constraintVertical_bias="0.126">
+
+        <!-- Button to choose an image -->
+        <Button
+            android:id="@+id/buttonChooseImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#5C96E2"
+            android:textColor="@color/white"
+            android:text="Choose Image" />
+
+        <!-- ImageView to display the chosen image -->
+        <ImageView
+            android:id="@+id/noteImageView"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:background="@android:color/darker_gray"
+            android:contentDescription="Note Image"
+            android:scaleType="centerCrop"
+            tools:layout_editor_absoluteX="-1dp"
+            tools:layout_editor_absoluteY="342dp" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

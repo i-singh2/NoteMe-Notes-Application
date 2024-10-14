@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.content.Intent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.net.Uri;
+import android.widget.ImageView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 
 import androidx.activity.EdgeToEdge;
@@ -81,12 +86,12 @@ public class MainActivity extends AppCompatActivity {
         if (filter.isEmpty()) {
             //get all the notes
             cursor = db.query(DatabaseHelper.TABLE_NAME,
-                    new String[]{DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_SUBTITLE, DatabaseHelper.COLUMN_DESCRIPTION, DatabaseHelper.COLUMN_COLOR},
+                    new String[]{DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_SUBTITLE, DatabaseHelper.COLUMN_DESCRIPTION, DatabaseHelper.COLUMN_COLOR, DatabaseHelper.COLUMN_IMAGE},
                     null, null, null, null, null);
         } else {
             //filter notes by title
             cursor = db.query(DatabaseHelper.TABLE_NAME,
-                    new String[]{DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_SUBTITLE, DatabaseHelper.COLUMN_DESCRIPTION, DatabaseHelper.COLUMN_COLOR},
+                    new String[]{DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TITLE, DatabaseHelper.COLUMN_SUBTITLE, DatabaseHelper.COLUMN_DESCRIPTION, DatabaseHelper.COLUMN_COLOR},
                     DatabaseHelper.COLUMN_TITLE + " LIKE ?",
                     new String[]{"%" + filter + "%"}, null, null, null);
         }
@@ -99,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
             String subtitle = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_SUBTITLE));
             String description = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_DESCRIPTION));
             String color = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_COLOR));
+            String imagePath = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_IMAGE));
+            int noteId = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID));
 
             // Create a TextView for each note
             TextView noteView = new TextView(this);
@@ -117,10 +124,47 @@ public class MainActivity extends AppCompatActivity {
             //Apply parameters
             noteView.setLayoutParams(parameters);
 
+            // Add click listener to open note for editing
+            noteView.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, CreateNewNote.class);
+                intent.putExtra("noteId", noteId); // Pass the note ID to the CreateNewNote activity
+                startActivity(intent);
+            });
+
+            // Long-press listener to delete the note
+            noteView.setOnLongClickListener(v -> {
+                // Show a confirmation dialog before deleting
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Delete Note")
+                        .setMessage("Are you sure you want to delete this note?")
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            // Delete the note from the database
+                            boolean isDeleted = dbHelper.deleteNoteById(noteId);
+                            if (isDeleted) {
+                                // Remove the note view from the layout and show a success message
+                                noteList.removeView(noteView);
+                                Toast.makeText(MainActivity.this, "Note deleted", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Error deleting note", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null) // Do nothing on cancel
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+                return true; // Return true to indicate the long press was handled
+            });
+
             // Add the note view to the LinearLayout
             noteList.addView(noteView);
         }
 
         cursor.close();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadNotes(""); // Reload notes when returning to MainActivity
     }
 }
