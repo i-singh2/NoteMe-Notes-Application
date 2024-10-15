@@ -2,6 +2,7 @@ package com.example.noteme;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,7 +21,9 @@ import androidx.core.content.FileProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class CreateNewNote extends AppCompatActivity {
 
@@ -71,8 +74,10 @@ public class CreateNewNote extends AppCompatActivity {
                             Intent data = result.getData();
                             if (data != null && data.getData() != null) {
                                 // This means the result is from the gallery (we got a Uri from gallery)
-                                Uri selectedImageUri = data.getData();
-                                noteImageView.setImageURI(selectedImageUri);  // Display the gallery image
+                                imageUri = data.getData(); // Save the gallery image URI
+                                noteImageView.setImageURI(imageUri);  // Display the gallery image
+                                // Save the image to app's internal storage
+                                saveImageToInternalStorage(imageUri);
                             } else if (imageUri != null) {
                                 // This means the result is from the camera (we have our pre-created Uri)
                                 noteImageView.setImageURI(imageUri);  // Display the captured image
@@ -173,6 +178,27 @@ public class CreateNewNote extends AppCompatActivity {
         );
         savedImageFile = image;
         return image;
+    }
+
+    // Save selected gallery image to internal storage
+    private void saveImageToInternalStorage(Uri imageUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            if (inputStream == null) return;
+
+            File imageFile = new File(getFilesDir(), "note_image_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            outputStream.close();
+            savedImageFile = imageFile; // Save the file path for later use
+        } catch (IOException e) {
+            Toast.makeText(this, "Error saving image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Load existing note data into the fields for editing
