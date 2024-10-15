@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <provider
-            android:authorities="com.example.noteme.fileprovider"
+            android:authorities="com.example.noteme.provider"
             android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">

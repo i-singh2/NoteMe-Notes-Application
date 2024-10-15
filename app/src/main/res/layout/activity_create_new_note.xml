@@ -166,11 +166,12 @@
         <!-- ImageView to display the chosen image -->
         <ImageView
             android:id="@+id/noteImageView"
-            android:layout_width="300dp"
-            android:layout_height="200dp"
+            android:layout_width="225dp"
+            android:layout_height="250dp"
             android:background="@android:color/darker_gray"
             android:contentDescription="Note Image"
             android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             tools:layout_editor_absoluteX="-1dp"
             tools:layout_editor_absoluteY="342dp" />
 
