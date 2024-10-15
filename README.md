@@ -1,6 +1,6 @@
 # NoteMe - Notes Application
 
-This is a simple Android application for creating, editing, and managing notes. Users can add text, set colors, and attach images to their notes. Images can be uploaded from the gallery or captured via the camera. Notes can be saved, edited, deleted, and searched using the built-in search bar functionality.
+This simple Android application allows users to create, edit, and manage notes. Users can add text, set colors, and attach images to their notes. Images can be uploaded from the gallery or captured via the camera. Notes can be saved, edited, deleted, and searched using the built-in search bar functionality.
 
 ![z1](https://github.com/user-attachments/assets/20d03348-bf4e-4b90-b802-70e7ca37fe1f)
 ![z2](https://github.com/user-attachments/assets/83e29de1-bdfa-4cc5-a196-e3be183f0b06)
